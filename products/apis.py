@@ -1,12 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, serializers
+from rest_framework.permissions import IsAuthenticated
 
 from products.models import Products
 from .selectors import product_list
 from .services import create_product
 
 class ProductCreateView(APIView):
+    permission_classes = [IsAuthenticated]
     class InputSerializer(serializers.Serializer):
         name = serializers.CharField()
         description = serializers.CharField()
@@ -29,6 +31,7 @@ class ProductCreateView(APIView):
 
 
 class ProductListView(APIView):
+    permission_classes = [IsAuthenticated]
     class OutputSerializer(serializers.ModelSerializer):
         category = serializers.CharField(source="category.name")  # To include category name
         created_by = serializers.CharField(source="created_by.email")  # To include user email

@@ -2,9 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, serializers
 from .services import create_category
-
+from rest_framework.permissions import IsAuthenticated
 
 class CategoryCreateView(APIView):
+    permission_classes = [IsAuthenticated]
     class InputSerializer(serializers.Serializer):
         name = serializers.CharField()
         description = serializers.CharField()
