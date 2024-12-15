@@ -1,3 +1,36 @@
 from django.db import models
+from common.models import BaseModel
+from django.contrib.auth.models import AbstractUser
+from .usermanager import CustomUserManager
 
-# Create your models here.
+
+
+class Users(BaseModel, AbstractUser):
+    class Role(models.TextChoices):
+        ADMIN='AD','Admin'
+        CUSTOMER='CU','Customer'
+        
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    phone_number = models.PositiveSmallIntegerField(null=True, blank=True)
+    email = models.EmailField(unique=True, null=False, blank=False)
+    password = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    username = None
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = CustomUserManager()
+
+    class Meta:
+        ordering = ['first_name', 'last_name']
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.email}"
+
+

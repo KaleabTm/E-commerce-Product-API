@@ -20,7 +20,7 @@ SECRET_KEY = 'django-insecure-cp0-l29obdk0wi!7!l^9n9x_zx!6r5f$55et$=#h4a(pr+u*76
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'products.apps.ProductsConfig',
     'users.apps.UsersConfig',
+    'common.apps.CommonConfig',
 
     #third-party apps
     'rest_framework',
@@ -141,3 +142,6 @@ AUTHENTICATION_BACKENDS = (
     'rules.permissions.ObjectPermissionBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+
+AUTH_USER_MODEL = 'users.Users'
