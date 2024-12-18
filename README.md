@@ -26,10 +26,10 @@ This project implements an API for managing products, categories, shopping carts
     "category": "Electronics",
     "created_by": "user@example.com"
 }
+```
 
-Response Example
-json
- 
+#### Response Example  
+```json
 {
     "name": "Laptop",
     "description": "A high-performance laptop",
@@ -38,13 +38,15 @@ json
     "category": "Electronics",
     "created_by": "user@example.com"
 }
-2. Product Listing Endpoint
-URL: /api/products/
-Method: GET
-Description: Retrieves a list of all products in the database.
-Response Example
-json
+```
 
+### 2. **Product Listing Endpoint**
+- **URL**: `/api/products/`
+- **Method**: `GET`
+- **Description**: Retrieves a list of all products in the database.
+
+#### Response Example  
+```json
 [
     {
         "name": "Laptop",
@@ -63,49 +65,72 @@ json
         "created_by": "admin@example.com"
     }
 ]
-Setup Instructions
-Prerequisites
-Python 3.10 or higher
-Django 5.1
-PostgreSQL
-Installation
-Clone the repository:
+```
 
-bash
+## Setup Instructions
 
+### Prerequisites
+- Python 3.10 or higher
+- Django 5.1
+- PostgreSQL
+
+### Installation
+Follow the steps below to set up the project locally.
+
+## 1. Clone the Repository
+
+First, clone the repository using Git:
+
+```bash
 git clone https://github.com/your-username/your-repo.git
 cd your-repo
-Create a virtual environment and install dependencies:
+```
 
-bash
+## 2. Create a Virtual Environment and Install Dependencies
 
+Next, create a virtual environment and activate it:
+
+```bash
 python -m venv env
-source env/bin/activate  # On Windows use `env\Scripts\activate`
+source env/bin/activate  # On Windows, use `env\Scripts\activate`
+```
+
+Then, install the required dependencies:
+
+```bash
 pip install -r requirements.txt
-Configure the .env file with database and other settings:
+```
 
-Create a .env file in the root of your project.
-Add the following configuration to .env:
-makefile
+## 3. Configure the `.env` File
 
+Create a `.env` file in the root of your project and add the following configuration for the database and other settings:
+
+```
 DB_NAME=your_db_name
 DB_USER=your_db_user
 DB_PASSWORD=your_db_password
 DB_HOST=localhost
 DB_PORT=5432
-Run database migrations:
+```
 
-bash
+## 4. Run Database Migrations
 
+Run the database migrations to set up your database:
+
+```bash
 python manage.py migrate
-Start the development server:
+```
 
-bash
+## 5. Start the Development Server
 
+Finally, start the development server:
+
+```bash
 python manage.py runserver
-Additional Information
-This project uses Django REST framework for building the API.
-PostgreSQL is used as the database.
-You can extend the API with more features like cart management, order management, and authentication.
-go
+```
 
+## Additional Information
+
+- This project uses Django REST framework to build the API.
+- PostgreSQL is used as the database.
+- You can extend the API with additional features like cart management, order management, and authentication.
