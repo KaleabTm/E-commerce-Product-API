@@ -14,6 +14,15 @@ class Products(BaseModel):
     category = models.ForeignKey(Category,on_delete=models.PROTECT)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
 
+    @property
+    def stars(self):
+        from django.db.models import Avg
+        return self.rating.aggregate(average=Avg("rating"))["average"] or 0
+    
+    @property
+    def total_ratings(self):
+        return self.ratings.count()
+
     class Meta:
         ordering = ['name']
         verbose_name = 'Product'
@@ -21,3 +30,15 @@ class Products(BaseModel):
     
     def __str__(self):
         return f"{self.name} - {self.category} - {self.price}"
+
+
+class ProductImage(BaseModel):
+    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="products/product_images")
+    label = models.CharField(
+        max_length=50, blank=True, null=True, help_text="Label for the image (e.g., 'Front View', 'Side View')."
+    )
+
+    def __str__(self):
+        return f"{self.product.name} - {self.label or 'Image'}"
+
