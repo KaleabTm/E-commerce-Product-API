@@ -1,4 +1,3 @@
-
 from datetime import timezone
 from django.db import models
 
@@ -9,6 +8,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class Cart(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
 
@@ -16,10 +16,11 @@ class Cart(BaseModel):
         return f"{self.id} - cart of {self.user.email}"
 
 
-
 class CartItem(BaseModel):
     cart = models.ForeignKey("Cart", on_delete=models.CASCADE, related_name="items")
-    product = models.ForeignKey("products.Products", on_delete=models.CASCADE, related_name="cart_items")
+    product = models.ForeignKey(
+        "products.Products", on_delete=models.CASCADE, related_name="cart_items"
+    )
     quantity = models.PositiveIntegerField()
 
     @property
@@ -39,11 +40,11 @@ class CartItem(BaseModel):
         return f"{self.quantity} of {self.product.product_name}"
 
 
-
-
 class Wishlist(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishlists")
-    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name="wishlists")
+    product = models.ForeignKey(
+        Products, on_delete=models.CASCADE, related_name="wishlists"
+    )
 
     class Meta:
         unique_together = ("user", "product")

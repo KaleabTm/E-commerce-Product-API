@@ -1,22 +1,22 @@
 # E-Commerce Product and Order Management API
 
-## Description  
+## Description
 This project implements an API for managing products, categories, shopping carts, and orders in an e-commerce platform. The API supports product CRUD operations, category management, cart management, order creation, and user authentication.
 
-## Features  
-- **Product Management**: Add, update, delete, and view product details.  
-- **Category Management**: Manage product categories.  
-- **Cart Management**: Add, view, update, and delete cart items.  
-- **Order Management**: Place orders and track order statuses.  
+## Features
+- **Product Management**: Add, update, delete, and view product details.
+- **Category Management**: Manage product categories.
+- **Cart Management**: Add, view, update, and delete cart items.
+- **Order Management**: Place orders and track order statuses.
 
-## Endpoints Implemented  
+## Endpoints Implemented
 
-### 1. **Product Creation Endpoint**  
-- **URL**: `/api/products/create/`  
-- **Method**: `POST`  
-- **Description**: Adds a new product to the database.  
+### 1. **Product Creation Endpoint**
+- **URL**: `/api/products/create/`
+- **Method**: `POST`
+- **Description**: Adds a new product to the database.
 
-#### Request Example  
+#### Request Example
 ```json
 {
     "name": "Laptop",
@@ -28,7 +28,7 @@ This project implements an API for managing products, categories, shopping carts
 }
 ```
 
-#### Response Example  
+#### Response Example
 ```json
 {
     "name": "Laptop",
@@ -45,7 +45,7 @@ This project implements an API for managing products, categories, shopping carts
 - **Method**: `GET`
 - **Description**: Retrieves a list of all products in the database.
 
-#### Response Example  
+#### Response Example
 ```json
 [
     {

@@ -7,22 +7,24 @@ from .services import create_user
 
 # Create your views here.
 
-class Login(APIView):
 
+class Login(APIView):
     class InputSerializer(serializers.Serializer):
         email = serializers.EmailField()
         password = serializers.CharField(write_only=True)
-    
-    def post(self,request):
+
+    serializer_class = InputSerializer
+
+    def post(self, request):
         serializer = self.InputSerializer(data=request.data)
 
         if not serializer.is_valid():
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        email = serializer.validated_data['email']
-        password = serializer.validated_data['password']
+        email = serializer.validated_data["email"]
+        password = serializer.validated_data["password"]
 
-        user = authenticate(request, username=email,password=password)
+        user = authenticate(request, username=email, password=password)
 
         if user is None:
             return Response(
@@ -34,18 +36,26 @@ class Login(APIView):
 
         session_id = request.session.session_key
 
-        return Response({"detail": "User logged in successfully", "session_id": session_id}, status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "User logged in successfully", "session_id": session_id},
+            status=status.HTTP_200_OK,
+        )
 
 
 class Logout(APIView):
-    def post(self,request):
+    def post(self, request):
         logout(request)
-        return Response({"detail":"You have logged out successfully"}, status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "You have logged out successfully"}, status=status.HTTP_200_OK
+        )
+
 
 class RegisterApi(APIView):
     class InputSerializer(serializers.Serializer):
         email = serializers.EmailField()
-        password = serializers.CharField(write_only=True, required=True)  # Make password required
+        password = serializers.CharField(
+            write_only=True, required=True
+        )  # Make password required
 
     serializer_class = InputSerializer
 
@@ -72,4 +82,3 @@ class RegisterApi(APIView):
         except Exception as e:
             # Handle any other unexpected errors
             return Response({"error": str(e)}, status=500)
-

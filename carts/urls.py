@@ -1,5 +1,4 @@
-from django.urls import path
-app_name = 'carts'
+app_name = "carts"
 
 urlpatterns = [
     # path('')

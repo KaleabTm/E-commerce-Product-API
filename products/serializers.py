@@ -1,26 +1,35 @@
 from rest_framework import serializers
 from .models import ProductImage, Products
 
+
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ['id', 'image', 'label']
+        fields = ["id", "image", "label"]
+
 
 class ProductDetailSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, required=False)
+    images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Products
-        fields = ['id', 'name', 'description', 'price', 'stock', 'category', 'is_popular', 'is_latest', 'images']
+        fields = ["id", "name", "description", "price", "stock", "category", "images"]
 
-    # def create(self, validated_data):
-    #     images_data = validated_data.pop('images', [])
-    #     product = Product.objects.create(**validated_data)
-    #     for image_data in images_data:
-    #         ProductImage.objects.create(product=product, **image_data)
-    #     return product
 
 class ProductListSerializer(serializers.ModelSerializer):
+    category = serializers.CharField(source="category.name")
+    created_by = serializers.CharField(source="created_by.email")
+
     class Meta:
         model = Products
-        fields = ['id', 'category', 'created_by']
+        fields = ["name", "description", "price", "stock", "category", "created_by"]
+
+
+class ProductCreateSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    description = serializers.CharField()
+    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    stock = serializers.IntegerField()
+    category = serializers.IntegerField()
+    created_by = serializers.CharField()
+    images = ProductImageSerializer(many=True)

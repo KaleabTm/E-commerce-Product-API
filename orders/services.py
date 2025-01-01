@@ -1,21 +1,17 @@
-from carts.models import Cart
-from .models import Order, OrderItem
-from django.core.exceptions import ValidationError
-from django.contrib.auth import get_user_model
+from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
+
+from carts.models import Cart
+from .models import OrderItem, Order
+from django.contrib.auth import get_user_model
 from products.models import Products
 
 User = get_user_model()
 
 
-def create_order(
-    *,
-    user: str,
-) -> Order:
+def create_order(*, user, has_paid=False, status="PENDING") -> Order:
     customer = get_object_or_404(User, email=user)
-    order = Order.objects.create(
-        user=customer,
-    )
+    order = Order.objects.create(user=customer, has_paid=has_paid, status=status)
 
     order.full_clean()
 
@@ -24,34 +20,34 @@ def create_order(
     return order
 
 
-def create_order_item(*, user: str, product: str, quantity: int) -> OrderItem:
+def create_order_item(*, order, user, product: str, quantity: int) -> OrderItem:
     orders = create_order(user)
-    target_product = get_object_or_404(Products, id=product)
+    target_product = []
+    for product in product:
+        if target_product.stock < quantity:
+            raise ValueError(f"Not enough stock for {product.name}")
+        target_product = get_object_or_404(Products, id=product)
 
-    if target_product.stock < quantity:
-        raise ValueError(f"Not enough stock for {product.name}")
+        target_product.stock -= quantity
 
-    target_product.stock -= quantity
-
-    total_price = target_product.price * quantity
+        item_total_price = target_product.price * quantity
 
     order_item = OrderItem.objects.create(
         order=orders,
         product=target_product,
         quantity=quantity,
         price=target_product.price,
-        total_price=total_price,
+        item_total_price=item_total_price,
     )
+
+    for total_price in item_total_price:
+        orders.order_total_price += total_price
+
+        orders.save()
 
     order_item.full_clean()
 
     order_item.save()
-
-
-# def calculate_order_total(order_id):
-#     order = get_object_or_404(Order,id=order_id)
-#     order.total_price = sum(item.total_price for item in order.items.all())
-#     order.save()
 
 
 def approve_order(order_id):

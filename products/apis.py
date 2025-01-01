@@ -1,17 +1,23 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, serializers
-from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
 from permissions.mixins import ApiAuthMixin
-from .models import Products
-from .selectors import product_list
+from .selectors import product_detail, product_list
 from .services import create_product
-from .serializers import ProductDetailSerializer, ProductListSerializer
+from .serializers import (
+    ProductCreateSerializer,
+    ProductDetailSerializer,
+    ProductListSerializer,
+)
+
 
 class ProductCreateView(ApiAuthMixin, APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = ProductCreateSerializer
+
     def post(self, request):
-        serializer = ProductDetailSerializer(data=request.data)
+        serializer = ProductCreateSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         try:
@@ -21,17 +27,19 @@ class ProductCreateView(ApiAuthMixin, APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-
-class ProductListView(APIView):
-    class OutputSerializer(serializers.ModelSerializer):
-        category = serializers.CharField(source="category.name") 
-        created_by = serializers.CharField(source="created_by.email")
-
-        class Meta:
-            model = Products
-            fields = ['name', 'description', 'price', 'stock', 'category', 'created_by']
+class ProductListView(ApiAuthMixin, APIView):
+    serializer_class = ProductListSerializer
 
     def get(self, request):
         products = product_list()
-        serializer = self.OutputSerializer(products, many=True)  # Pass QuerySet here
+        serializer = ProductListSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ProductDetailView(ApiAuthMixin, APIView):
+    serializer_class = ProductDetailSerializer()
+
+    def get(self, request, product_id):
+        product = product_detail(product_id)
+        serializer = ProductDetailSerializer(product)
         return Response(serializer.data, status=status.HTTP_200_OK)

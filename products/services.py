@@ -6,14 +6,13 @@ User = get_user_model()
 
 
 def create_product(
-        *,
-        name:str,
-        description:str,
-        price:float,
-        created_by:str,
-        stock:int,
-        category:str,
-
+    *,
+    name: str,
+    description: str,
+    price: float,
+    created_by: str,
+    stock: int,
+    category: str,
 ) -> Products:
     u = User.objects.get(email=created_by)
     c = Category.objects.get(id=category)
@@ -23,7 +22,7 @@ def create_product(
         price=price,
         created_by=u,
         category=c,
-        stock=stock
+        stock=stock,
     )
 
     p.full_clean()
@@ -31,3 +30,14 @@ def create_product(
     p.save()
 
     return p
+
+
+def create_product_image(*, product: str, image, label: str) -> Products:
+    p = Products.objects.get(id=product)
+    pi = Products.objects.create(product=p, image=image, label=label)
+
+    pi.full_clean()
+
+    pi.save()
+
+    return pi

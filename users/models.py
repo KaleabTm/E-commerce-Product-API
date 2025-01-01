@@ -4,15 +4,16 @@ from django.contrib.auth.models import AbstractUser
 from .usermanager import CustomUserManager
 
 
-
 class Users(BaseModel, AbstractUser):
     class Role(models.TextChoices):
-        ADMIN='AD','Admin'
-        CUSTOMER='CU','Customer'
-        
+        ADMIN = "AD", "Admin"
+        CUSTOMER = "CU", "Customer"
+
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
-    profile_pic = models.ImageField(upload_to='users/profile_pic', null=True, blank=True)
+    profile_pic = models.ImageField(
+        upload_to="users/profile_pic", null=True, blank=True
+    )
     phone_number = models.PositiveSmallIntegerField(unique=True, null=True, blank=True)
     email = models.EmailField(unique=True, null=False, blank=False)
     password = models.CharField(max_length=255)
@@ -24,17 +25,15 @@ class Users(BaseModel, AbstractUser):
 
     username = None
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
     class Meta:
-        ordering = ['first_name', 'last_name']
-        verbose_name = 'User'
-        verbose_name_plural = 'Users'
+        ordering = ["first_name", "last_name"]
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.email}"
-
-

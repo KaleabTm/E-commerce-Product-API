@@ -4,30 +4,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0003_alter_users_managers_alter_users_phone_number'),
+        ("users", "0003_alter_users_managers_alter_users_phone_number"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='users',
-            name='address',
+            model_name="users",
+            name="address",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='users',
-            name='date_of_birth',
+            model_name="users",
+            name="date_of_birth",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='users',
-            name='profile_pic',
-            field=models.ImageField(blank=True, null=True, upload_to='users/profile_pic'),
+            model_name="users",
+            name="profile_pic",
+            field=models.ImageField(
+                blank=True, null=True, upload_to="users/profile_pic"
+            ),
         ),
         migrations.AlterField(
-            model_name='users',
-            name='phone_number',
+            model_name="users",
+            name="phone_number",
             field=models.PositiveSmallIntegerField(blank=True, null=True, unique=True),
         ),
     ]

@@ -5,21 +5,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0002_alter_users_managers_users_date_joined_users_groups_and_more'),
+        ("users", "0002_alter_users_managers_users_date_joined_users_groups_and_more"),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name='users',
+            name="users",
             managers=[
-                ('objects', users.usermanager.CustomUserManager()),
+                ("objects", users.usermanager.CustomUserManager()),
             ],
         ),
         migrations.AlterField(
-            model_name='users',
-            name='phone_number',
+            model_name="users",
+            name="phone_number",
             field=models.PositiveSmallIntegerField(blank=True, null=True),
         ),
     ]

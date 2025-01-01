@@ -8,9 +8,9 @@ class Category(BaseModel):
     description = models.TextField()
 
     class Meta:
-        ordering = ['name']
-        verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
+        ordering = ["name"]
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
 
     def __str__(self):
         return f"{self.name}"
