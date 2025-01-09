@@ -3,8 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.exceptions import ValidationError
+from rest_framework.pagination import PageNumberPagination
 
 from permissions.mixins import ApiAuthMixin
+from .filters import filter_products
 from .selectors import product_detail, product_list
 from .services import create_product, update_product
 from .serializers import (
@@ -101,3 +103,28 @@ class ProductUpdateApi(ApiAuthMixin, APIView):
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+class ProductSearchPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = "page_size"
+    max_page_size = 100
+
+class ProductSearchApi(APIView):
+    pagination_class = ProductSearchPagination
+
+    def get(self, request):
+        query = request.query_params.get("query", "").strip()
+        category = request.query_params.get("category", "").strip()
+
+        # Call the filter function
+        filtered_products = filter_products(query=query, category=category)
+
+        # Paginate results
+        paginator = self.pagination_class()
+        paginated_queryset = paginator.paginate_queryset(filtered_products, request)
+        serializer = ProductListSerializer(paginated_queryset, many=True)
+
+        return paginator.get_paginated_response(serializer.data)
