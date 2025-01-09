@@ -14,7 +14,7 @@ class Users(BaseModel, AbstractUser):
     profile_pic = models.ImageField(
         upload_to="users/profile_pic", null=True, blank=True
     )
-    phone_number = models.PositiveSmallIntegerField(unique=True, null=True, blank=True)
+    phone_number = models.PositiveIntegerField(unique=True, null=True, blank=True)
     email = models.EmailField(unique=True, null=False, blank=False)
     password = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)

@@ -22,6 +22,12 @@ class CartItem(BaseModel):
         "products.Products", on_delete=models.CASCADE, related_name="cart_items"
     )
     quantity = models.PositiveIntegerField()
+    cart_item_total_price = models.DecimalField(
+        max_digits=10, decimal_places=2, editable=False, default=0.0
+    )
+
+    class Meta:
+        unique_together = ("cart", "product")
 
     def __str__(self):
         return f"{self.quantity} of {self.product.product_name}"

@@ -75,7 +75,7 @@ def apply_discount(product_id):
     product = Products.objects.get(id=product_id)
     discount = Discount.objects.get(product=product)
 
-    if is_available():
+    if is_available(discount):
         if discount.discount_type == "PERCENTAGE":
             return product.product_price * (1 - discount.value / 100)
         elif discount.discount_type == "FLAT":

@@ -18,3 +18,5 @@ class CartAdmin(admin.ModelAdmin):
         "user",
 
     ]
+
+admin.site.register(Cart,CartAdmin)

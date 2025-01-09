@@ -5,7 +5,7 @@ from .models import ProductImage, Products
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ["id", "image", "label"]
+        fields = ['image', 'label']
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
@@ -17,19 +17,26 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-    category = serializers.CharField(source="category.name")
-    created_by = serializers.CharField(source="created_by.email")
-
+    images = ProductImageSerializer(many=True, read_only=True)
     class Meta:
         model = Products
-        fields = ["name", "description", "price", "stock", "category", "created_by"]
+        fields = ["id","name", "description", "price", "stock", "category", "created_by", "images"]
 
+
+        
 
 class ProductCreateSerializer(serializers.Serializer):
     name = serializers.CharField()
     description = serializers.CharField()
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
     stock = serializers.IntegerField()
-    category = serializers.IntegerField()
-    created_by = serializers.CharField()
-    images = ProductImageSerializer(many=True)
+    category = serializers.CharField()
+
+
+class ProductUpdateSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    description = serializers.CharField()
+    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    stock = serializers.IntegerField()
+    category = serializers.CharField()
+

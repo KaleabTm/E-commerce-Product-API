@@ -27,7 +27,7 @@ class DiscountCreateApi(ApiAuthMixin, APIView):
         except Exception as e:
             return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class DiscountListApi(APIView):
+class DiscountListApi(APIView, ApiAuthMixin):
     def get(self, request):
         try:
             discounts = discount_list_display()

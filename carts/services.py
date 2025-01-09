@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from carts.models import Cart, CartItem
+from discounts.services import apply_discount
 from products.models import Products
 from django.contrib.auth import get_user_model
 
@@ -36,6 +37,8 @@ def add_to_cart(user, product_id, quantity):
         cart_item.quantity += quantity
     else:
         cart_item.quantity = quantity
+
+    cart_item.cart_item_total_price = apply_discount(product.id) * quantity
 
     cart_item.save()
 

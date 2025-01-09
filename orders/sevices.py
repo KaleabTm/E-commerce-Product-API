@@ -1,4 +1,5 @@
 from carts.models import Cart
+from products.services import reduce_stock
 from .models import Order, OrderItem
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
@@ -31,7 +32,7 @@ def create_order_item(*, user: str, product: str, quantity: int) -> OrderItem:
     if target_product.stock < quantity:
         raise ValueError(f"Not enough stock for {product.name}")
 
-    target_product.stock -= quantity
+    reduce_stock(target_product, quantity)
 
     total_price = target_product.price * quantity
 
@@ -86,7 +87,7 @@ def place_order_cart(user):
             quantity=item.quantity,
             price=item.product.price,
         )
-        item.product.reduce_stock(item.quantity)
+        reduce_stock(item.product, item.quantity)
 
     # Clear the cart after order
     cart.items.all().delete()
