@@ -21,63 +21,28 @@ def create_order(*, user, has_paid=False, status="PENDING") -> Order:
 
     return order
 
-
-# def create_order_item(*, order, user, product: str, quantity: int) -> OrderItem:
-#     orders = create_order(user)
-#     target_product = []
-#     for product in product:
-#         if target_product.stock < quantity:
-#             raise ValueError(f"Not enough stock for {product.name}")
-#         target_product = get_object_or_404(Products, id=product)
-
-#         target_product.stock -= quantity
-
-#         item_total_price = apply_discount(product) * quantity
-
-#     order_item = OrderItem.objects.create(
-#         order=orders,
-#         product=target_product,
-#         quantity=quantity,
-#         price=target_product.price,
-#         item_total_price=item_total_price,
-#     )
-
-#     for total_price in item_total_price:
-#         orders.order_total_price += total_price
-
-#         orders.save()
-
-#     order_item.full_clean()
-
-#     order_item.save()
-
-def create_order_item(*, order, user, product: str, quantity: int) -> OrderItem:
-    orders = create_order(user)
+def create_order_item(*, order: Order, product: str, quantity: int) -> OrderItem:
     target_product = get_object_or_404(Products, id=product)
     if target_product.stock < quantity:
-        raise ValueError(f"Not enough stock for {product.name}")
+        raise ValueError(f"Not enough stock for {target_product.name}")
 
     target_product.stock -= quantity
+    target_product.save()
 
-    item_total_price = apply_discount(product) * quantity
+    item_total_price = apply_discount(target_product) * quantity
 
     order_item = OrderItem.objects.create(
-        order=orders,
+        order=order,
         product=target_product,
         quantity=quantity,
         price=target_product.price,
         item_total_price=item_total_price,
     )
 
-    for total_price in item_total_price:
-        orders.order_total_price += total_price
+    order.full_clean()
+    order.save()
 
-        orders.save()
-
-    order_item.full_clean()
-
-    order_item.save()
-
+    return order_item
 
 def approve_order(order_id):
     order = get_object_or_404(Order, id=order_id)
@@ -141,3 +106,23 @@ def place_order_cart(user, product_id):
     # Clear the cart after order
     cart.items.delete(product=product)
     return order
+
+
+def cancel_order(order_id: str):
+    order = get_object_or_404(Order, id=order_id)
+    if order.status in [Order.Status.DELIVERED, Order.Status.CANCELLED]:
+        raise ValidationError(f"Cannot cancel an order with status {order.status}.")
+    order.status = Order.Status.CANCELLED
+    order.save()
+
+    # Restore stock for each item
+    for item in order.items.all():
+        item.product.stock += item.quantity
+        item.product.save()
+
+def update_order(order_id: str, **kwargs):
+    order = get_object_or_404(Order, id=order_id)
+    for key, value in kwargs.items():
+        setattr(order, key, value)
+    order.save()
+

@@ -6,7 +6,7 @@ def cart_item_detail(id):
     return CartItem.objects.get(id=id)
 
 def get_cart(user):
-    Cart.objects.get(user=user)
+    return Cart.objects.get(user=user)
     
 
 def cart_item_list(cart):

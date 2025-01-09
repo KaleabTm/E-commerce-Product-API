@@ -30,7 +30,7 @@ class CartItem(BaseModel):
         unique_together = ("cart", "product")
 
     def __str__(self):
-        return f"{self.quantity} of {self.product.product_name}"
+        return f"{self.quantity} of {self.product.name}"
 
 
 class Wishlist(BaseModel):
@@ -43,4 +43,4 @@ class Wishlist(BaseModel):
         unique_together = ("user", "product")
 
     def __str__(self):
-        return f"{self.user} - {self.product.product_name}"
+        return f"{self.user} - {self.product.name}"

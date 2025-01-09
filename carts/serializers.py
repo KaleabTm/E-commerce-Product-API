@@ -16,10 +16,10 @@ class CartItemListSerializer(serializers.ModelSerializer):
 
 class cartItemSerializer(serializers.Serializer):
     product = serializers.UUIDField()
-    quantity = serializers.UUIDField()
+    quantity = serializers.IntegerField()
 
 class CartSerializer(serializers.ModelSerializer):
     items = CartItemListSerializer(many=True, read_only=True)
     class Meta:
         model = Cart
-        fields = ["id", "user", "items", "created_at", "updated_at"]
+        fields = ["id", "items", "created_at", "updated_at"]

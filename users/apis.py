@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from permissions.mixins import ApiAuthMixin
 from .serializers import UserSerializer, UserUpdateSerializer
 from .services import create_user, update_userprofile
+from .selectors import user_detail, user_list
 
 
 
@@ -51,22 +52,23 @@ class UserUpdateApi(ApiAuthMixin, APIView):
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# class UserUpdateApi(ApiAuthMixin, APIView):
-#     serializer_class = UserUpdateSerializer
 
-#     def put(self, request, id):
-#         try:
-#             serializer = self.serializer_class(data=request.data)
-#             serializer.is_valid(raise_exception=True)
-#             update_userprofile(user=request.user,**serializer.validated_data)
-#             response_data = {
-#                 "detail":"you have successfully updated your profile",
-#                 "user_id":serializer.validated_data
-#             }
-#             return Response(data=response_data, status=status.HTTP_201_CREATED)
-#         except Exception as e:
-#             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+class UserListApi(ApiAuthMixin, APIView):
+    serializer_class = UserSerializer
 
+    def get(self, request):
+        users = user_list()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserDetailApi(ApiAuthMixin, APIView):
+    serializer_class = UserSerializer
+
+    def get(self, request, id):
+        user = user_detail(id)
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 

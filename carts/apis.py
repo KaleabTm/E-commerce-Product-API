@@ -67,14 +67,17 @@ class CartItemDeleteApi(ApiAuthMixin, APIView):
 
 class CartItemListViewApi(ApiAuthMixin, APIView):
 
-    serializer_class = CartSerializer
+    serializer_class = CartItemListSerializer
 
     def get(self,request):
         try:
             cart = get_cart(user=request.user)
+            print('dd',cart)
             cart_items = cart_item_list(cart=cart)
 
-            return Response(cart_items,status=status.HTTP_200_OK)
+            serializer = CartItemListSerializer(cart_items, many=True)
+
+            return Response(serializer.data,status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)

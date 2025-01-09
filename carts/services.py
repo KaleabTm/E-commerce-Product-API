@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from carts.models import Cart, CartItem
+from carts.selectors import get_cart
 from discounts.services import apply_discount
 from products.models import Products
 from django.contrib.auth import get_user_model
@@ -25,20 +26,16 @@ def create_cart(
     return cart
 
 
-def add_to_cart(user, product_id, quantity):
-    cart, _ = get_object_or_404(Cart, id=user)
-    product = get_object_or_404(Products, id=product_id)
+def add_to_cart(user, product, quantity):
+    cart = get_cart(user)
+    products = get_object_or_404(Products, id=product)
 
-    if product.stock < quantity:
+    if products.stock < quantity:
         raise ValueError("Insufficient stock available.")
 
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-    if not created:
-        cart_item.quantity += quantity
-    else:
-        cart_item.quantity = quantity
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=products, quantity=quantity)
 
-    cart_item.cart_item_total_price = apply_discount(product.id) * quantity
+    cart_item.cart_item_total_price = apply_discount(products.id) * quantity
 
     cart_item.save()
 
@@ -56,7 +53,7 @@ def update_cart_item_quantity(user, cart_item_id, product_id, quantity):
     return cart_item
 
 
-def remove_cart_item(user, cart_item_id):
+def remove_cart_item(cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
     cart_item.delete()
 
