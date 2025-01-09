@@ -25,7 +25,7 @@ class Review(BaseModel):
     product = models.ForeignKey(
         Products, on_delete=models.CASCADE, related_name="reviews"
     )
-    rating = models.ForeignKey(Rating, on_delete=models.PROTECT)
+    rating = models.OneToOneField(Rating, on_delete=models.PROTECT)
     comment = models.TextField(blank=True, null=True)
 
     def __str__(self):

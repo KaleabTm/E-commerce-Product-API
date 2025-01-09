@@ -73,12 +73,14 @@ class RegisterApi(APIView):
                 "email": user_instance.email,
             }
 
-            return Response(data=response_data)
+            return Response(data=response_data, status=status.HTTP_200_OK)
 
         except ValidationError as e:
             # DRF will handle this exception by default, so you can skip re-raising it
-            return Response({"errors": e.detail}, status=400)
+            return Response({"errors": e.detail}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             # Handle any other unexpected errors
-            return Response({"error": str(e)}, status=500)
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    

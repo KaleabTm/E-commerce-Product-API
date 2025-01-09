@@ -20,9 +20,7 @@ class Discount(BaseModel):
     value = models.DecimalField(max_digits=5, decimal_places=2)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-
-    def is_active(self):
-        return self.start_date <= now() <= self.end_date
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         if self.product:

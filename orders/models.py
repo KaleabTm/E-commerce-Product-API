@@ -11,6 +11,7 @@ class Order(BaseModel):
         PENDING = "PENDING", "Pending"
         APPROVED = "APPROVED", "Approved"
         CANCELLED = "CANCELLED", "Cancelled"
+        DELIVERED = "DELIVERED", "Delivered"
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     status = models.CharField(

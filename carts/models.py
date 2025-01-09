@@ -23,19 +23,6 @@ class CartItem(BaseModel):
     )
     quantity = models.PositiveIntegerField()
 
-    @property
-    def discounted_price(self):
-        active_discount = self.product.discounts.filter(
-            start_date__lte=timezone.now(),
-            end_date__gte=timezone.now(),
-        ).first()
-        if active_discount:
-            if active_discount.discount_type == "PERCENTAGE":
-                return self.product.product_price * (1 - active_discount.value / 100)
-            elif active_discount.discount_type == "FLAT":
-                return self.product.product_price - active_discount.value
-        return self.product.product_price
-
     def __str__(self):
         return f"{self.quantity} of {self.product.product_name}"
 

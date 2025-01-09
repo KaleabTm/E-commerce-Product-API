@@ -8,33 +8,17 @@ class CartItemListSerializer(serializers.ModelSerializer):
         model = CartItem
         fields = [
             "id",
-            "cart",
             "product",
-            "quantity",
-            "discounted_price",
-            "item_total_price",
+            "quantity"
         ]
 
 
-class cartItemCreateSerializer(serializers.Serializer):
-    cart = serializers.CharField()
-    product = serializers.CharField()
-    quantity = serializers.IntegerField()
-
-
-class CartItemUpdateSerializer(serializers.Serializer):
-    quantity = serializers.IntegerField()
-
-
-class CartItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CartItem
-        fields = ["id", "product", "quantity", "discounted_price", "item_total_price"]
-
+class cartItemSerializer(serializers.Serializer):
+    product = serializers.UUIDField()
+    quantity = serializers.UUIDField()
 
 class CartSerializer(serializers.ModelSerializer):
-    items = CartItemSerializer(many=True, read_only=True)
-
+    items = CartItemListSerializer(many=True, read_only=True)
     class Meta:
         model = Cart
         fields = ["id", "user", "items", "created_at", "updated_at"]

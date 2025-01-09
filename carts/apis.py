@@ -1,7 +1,95 @@
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from permissions.mixins import ApiAuthMixin
-from .serializers import cartItemCreateSerializer
+from rest_framework.exceptions import ValidationError
+
+from .serializers import CartItemListSerializer, CartSerializer, cartItemSerializer
+from .services import add_to_cart, remove_cart_item, update_cart_item_quantity
+from .selectors import cart_item_list, cart_item_detail, get_cart
 
 
-class CartItemCreate(ApiAuthMixin, APIView):
-    serializer_class = cartItemCreateSerializer
+class CartItemCreateApi(ApiAuthMixin, APIView):
+    serializer_class = cartItemSerializer
+
+    def post(self, request):
+        try:
+
+            serializer = cartItemSerializer(data=request.data)
+
+            serializer.is_valid(raise_exception=True)
+
+            add_to_cart(user=request.user, **serializer.validated_data)
+
+            return Response("Item added to cart successfuly",status=status.HTTP_201_CREATED)
+
+        except ValidationError as e:
+            raise ValidationError(e)
+
+        except Exception as e:
+            return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class CartItemUpdateApi(ApiAuthMixin, APIView):
+    serializer_class = cartItemSerializer
+
+    def put(self,request, id):
+        try:
+
+            serializer = cartItemSerializer(data=request.data)
+
+            serializer.is_valid(raise_exception=True)
+
+            update_cart_item_quantity(cart_item_id=id,**serializer.validated_data)
+
+            return Response("Item quantity updated",status=status.HTTP_202_ACCEPTED)
+
+        except ValueError as e:
+            return Response({"error":str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class CartItemDeleteApi(ApiAuthMixin, APIView):
+
+    def delete(self,request, id):
+        try:
+            remove_cart_item(cart_item_id=id)
+
+            return Response("Item Removed successfuly",status=status.HTTP_204_NO_CONTENT)
+
+        except ValueError as e:
+            return Response({"error":str(e)},status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CartItemListViewApi(ApiAuthMixin, APIView):
+
+    serializer_class = CartSerializer
+
+    def get(self,request):
+        try:
+            cart = get_cart(user=request.user)
+            cart_items = cart_item_list(cart=cart)
+
+            return Response(cart_items,status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class CartItemDetailViewApi(ApiAuthMixin, APIView):
+    
+    serializer_class = CartItemListSerializer
+
+    def get(self,request, id):
+        try:
+            cart_item = cart_item_detail(id=id)
+
+            output_data = CartItemListSerializer(cart_item).data
+
+            return Response(output_data,status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)

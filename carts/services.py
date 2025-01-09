@@ -10,8 +10,12 @@ def create_cart(
     *,
     user,
 ) -> Cart:
+    print("launched carti item create")
     u = get_object_or_404(User, email=user)
+    print("got user", u)
     cart = Cart.objects.create(user=u)
+
+    print("cart",cart)
 
     cart.full_clean()
 
@@ -21,7 +25,7 @@ def create_cart(
 
 
 def add_to_cart(user, product_id, quantity):
-    cart, _ = Cart.objects.get(user=user)
+    cart, _ = get_object_or_404(Cart, id=user)
     product = get_object_or_404(Products, id=product_id)
 
     if product.stock < quantity:
@@ -38,7 +42,7 @@ def add_to_cart(user, product_id, quantity):
     return cart_item
 
 
-def update_cart_item_quantity(user, product_id, quantity):
+def update_cart_item_quantity(user, cart_item_id, product_id, quantity):
     cart = get_object_or_404(Cart, user=user)
     product = get_object_or_404(Products, id=product_id)
 
@@ -49,11 +53,8 @@ def update_cart_item_quantity(user, product_id, quantity):
     return cart_item
 
 
-def remove_cart_item(user, product_id):
-    cart = get_object_or_404(Cart, user=user)
-    product = get_object_or_404(Products, id=product_id)
-
-    cart_item = get_object_or_404(CartItem, cart=cart, product=product)
+def remove_cart_item(user, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
     cart_item.delete()
 
-    return cart_item
+    return None
