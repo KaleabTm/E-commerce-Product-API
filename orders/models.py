@@ -27,7 +27,7 @@ class Order(BaseModel):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Order {self.id} by {self.user.email} - with total price of {self.total_price}  - {self.status} - {self.has_paid} "
+        return f"Order {self.id} by {self.user.email} - with total price of {self.order_total_price}  - {self.status} - {self.has_paid} "
 
 
 class OrderItem(BaseModel):

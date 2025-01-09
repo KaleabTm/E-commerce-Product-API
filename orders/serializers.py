@@ -26,6 +26,5 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
 
 class OrderCreateSerializer(serializers.Serializer):
-    user = serializers.CharField()
     product = serializers.CharField()
     quantity = serializers.IntegerField()

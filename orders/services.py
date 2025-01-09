@@ -12,7 +12,9 @@ User = get_user_model()
 
 
 def create_order(*, user, has_paid=False, status="PENDING") -> Order:
-    customer = get_object_or_404(User, email=user)
+    print('i',user)
+    customer = User.objects.get(id=user)
+    print("p",customer)
     order = Order.objects.create(user=customer, has_paid=has_paid, status=status)
 
     order.full_clean()
@@ -21,15 +23,17 @@ def create_order(*, user, has_paid=False, status="PENDING") -> Order:
 
     return order
 
-def create_order_item(*, order: Order, product: str, quantity: int) -> OrderItem:
+def create_order_item(*, user, product: str, quantity: int) -> OrderItem:
+    order  = create_order(user=user)
+    print ("o o", order)
+    
     target_product = get_object_or_404(Products, id=product)
-    if target_product.stock < quantity:
-        raise ValueError(f"Not enough stock for {target_product.name}")
 
-    target_product.stock -= quantity
-    target_product.save()
+    reduce_stock(target_product,quantity)
 
-    item_total_price = apply_discount(target_product) * quantity
+    print("pty")
+    item_total_price = apply_discount(target_product.id) * quantity
+
 
     order_item = OrderItem.objects.create(
         order=order,
@@ -39,8 +43,8 @@ def create_order_item(*, order: Order, product: str, quantity: int) -> OrderItem
         item_total_price=item_total_price,
     )
 
-    order.full_clean()
-    order.save()
+    order_item.full_clean()
+    order_item.save()
 
     return order_item
 

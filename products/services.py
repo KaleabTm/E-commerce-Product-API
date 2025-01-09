@@ -120,3 +120,26 @@ def update_product(
 
     return product
 
+def reduce_stock(product: Products, quantity: int) -> int:
+    """
+    Service to reduce the stock of a product.
+
+    Args:
+        product (Products): The product to reduce stock for.
+        quantity (int): Quantity to reduce.
+
+    Returns:
+        int: The remaining stock of the product.
+
+    Raises:
+        ValueError: If the stock is insufficient.
+    """
+    if product.stock < quantity:
+        raise ValueError("Insufficient Product Stock")
+
+    product.stock -= quantity
+    product.save(update_fields=["stock"])
+
+    return product.stock
+
+

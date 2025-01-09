@@ -72,11 +72,11 @@ class DiscountUpdateApi(ApiAuthMixin, APIView):
         
 
 class DiscountDeactivateApi(ApiAuthMixin, APIView):
-    def put(self,request, discount_id):
+    def put(self,request, id):
         try:
-            deactivate_discount(discount_id)
+            deactivate_discount(discount_id=id)
 
-            return Response("Discount deactivated",status=status.HTTP_202_ACCEPTED)
+            return Response({"Detail":"Discount deactivated"},status=status.HTTP_202_ACCEPTED)
 
         except ValueError as e:
             return Response({"error":str(e)},status=status.HTTP_400_BAD_REQUEST)
@@ -87,14 +87,14 @@ class DiscountDeactivateApi(ApiAuthMixin, APIView):
 
 class DiscountReactivateApi(ApiAuthMixin, APIView):
     serializer_class = DiscountReactivateSerializer
-    def put(self,request, discount_id):
+    def put(self,request, id):
         try:
             serializer = DiscountReactivateSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            reactivate_discount(discount_id, **serializer.validated_data)
+            reactivate_discount(discount_id=id, **serializer.validated_data)
 
-            return Response("Discount reactivated",status=status.HTTP_202_ACCEPTED)
+            return Response({"Detail":"Discount reactivated"},status=status.HTTP_202_ACCEPTED)
 
         except ValueError as e:
             return Response({"error":str(e)},status=status.HTTP_400_BAD_REQUEST)

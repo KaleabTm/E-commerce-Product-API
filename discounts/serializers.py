@@ -9,19 +9,17 @@ class DiscountSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DiscountCreateSerializer(serializers.Serializer):
-    product = serializers.UUIDField()
+    product = serializers.CharField()
     discount_type = serializers.ChoiceField(choices=["PERCENTAGE", "FLAT"])
     value = serializers.DecimalField(max_digits=10, decimal_places=2)
     start_date = serializers.DateTimeField()
     end_date = serializers.DateTimeField()
-    is_active = serializers.BooleanField()
 
 class DiscountUpdateSerializer(serializers.Serializer):
     discount_type = serializers.ChoiceField(choices=["PERCENTAGE", "FLAT"])
     value = serializers.DecimalField(max_digits=10, decimal_places=2)
     start_date = serializers.DateTimeField()
     end_date = serializers.DateTimeField()
-    is_active = serializers.BooleanField()
 
 
 class DiscountListSerializer(serializers.ModelSerializer):
