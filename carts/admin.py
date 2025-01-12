@@ -6,9 +6,13 @@ from .models import CartItem, Cart
 
 class CartItemAdmin(admin.ModelAdmin):
     model = CartItem
-    list_display = ["product", "quantity",]
+    list_display = [
+        "product",
+        "quantity",
+    ]
 
-admin.site.register(CartItem,CartItemAdmin)
+
+admin.site.register(CartItem, CartItemAdmin)
 
 
 class CartAdmin(admin.ModelAdmin):
@@ -16,7 +20,7 @@ class CartAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "user",
-
     ]
 
-admin.site.register(Cart,CartAdmin)
+
+admin.site.register(Cart, CartAdmin)

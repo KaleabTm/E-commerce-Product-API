@@ -14,7 +14,7 @@ def create_user(
     address,
     profile_pic,
     date_of_birth,
-    role="CU"
+    role="CU",
 ):
     user = User.objects.create_user(
         email=email,
@@ -25,7 +25,7 @@ def create_user(
         address=address,
         profile_pic=profile_pic,
         date_of_birth=date_of_birth,
-        role=role
+        role=role,
     )
 
     user.full_clean()

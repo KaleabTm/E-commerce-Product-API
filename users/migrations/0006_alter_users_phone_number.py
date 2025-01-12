@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0005_users_role'),
+        ("users", "0005_users_role"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='users',
-            name='phone_number',
+            model_name="users",
+            name="phone_number",
             field=models.PositiveIntegerField(blank=True, null=True, unique=True),
         ),
     ]

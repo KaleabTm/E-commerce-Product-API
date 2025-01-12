@@ -4,20 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('carts', '0001_initial'),
-        ('products', '0002_productimage'),
+        ("carts", "0001_initial"),
+        ("products", "0002_productimage"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cartitem',
-            name='cart_item_total_price',
-            field=models.DecimalField(decimal_places=2, default=0.0, editable=False, max_digits=10),
+            model_name="cartitem",
+            name="cart_item_total_price",
+            field=models.DecimalField(
+                decimal_places=2, default=0.0, editable=False, max_digits=10
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='cartitem',
-            unique_together={('cart', 'product')},
+            name="cartitem",
+            unique_together={("cart", "product")},
         ),
     ]

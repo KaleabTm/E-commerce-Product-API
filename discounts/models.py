@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.timezone import now
 from common.models import BaseModel
 from products.models import Products
 

@@ -22,9 +22,7 @@ class Users(BaseModel, AbstractUser):
     is_superuser = models.BooleanField(default=False)
     date_of_birth = models.DateField(null=True, blank=True)
     address = models.TextField(null=True, blank=True)
-    role = models.CharField(
-        max_length=200, choices=Role.choices, default=Role.CUSTOMER
-    )
+    role = models.CharField(max_length=200, choices=Role.choices, default=Role.CUSTOMER)
 
     username = None
 

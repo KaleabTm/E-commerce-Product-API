@@ -1,5 +1,11 @@
 from django.urls import path
-from .apis import ProductCreateApi, ProductListApi, ProductDetailApi, ProductUpdateApi, ProductSearchApi
+from .apis import (
+    ProductCreateApi,
+    ProductListApi,
+    ProductDetailApi,
+    ProductUpdateApi,
+    ProductSearchApi,
+)
 
 app_name = "products"
 

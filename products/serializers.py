@@ -5,7 +5,7 @@ from .models import ProductImage, Products
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ['image', 'label']
+        fields = ["image", "label"]
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
@@ -18,12 +18,20 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 class ProductListSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
+
     class Meta:
         model = Products
-        fields = ["id","name", "description", "price", "stock", "category", "created_by", "images"]
+        fields = [
+            "id",
+            "name",
+            "description",
+            "price",
+            "stock",
+            "category",
+            "created_by",
+            "images",
+        ]
 
-
-        
 
 class ProductCreateSerializer(serializers.Serializer):
     name = serializers.CharField()
@@ -39,4 +47,3 @@ class ProductUpdateSerializer(serializers.Serializer):
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
     stock = serializers.IntegerField()
     category = serializers.CharField()
-

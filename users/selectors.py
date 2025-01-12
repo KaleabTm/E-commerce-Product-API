@@ -1,5 +1,4 @@
-from django.db.models import QuerySet
-from .models import Users  
+from .models import Users
 
 
 def user_list() -> Users:

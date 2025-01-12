@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+
 class UserSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
@@ -9,7 +10,7 @@ class UserSerializer(serializers.Serializer):
     password = serializers.CharField()
     date_of_birth = serializers.DateField(required=False, allow_null=True)
     address = serializers.CharField(required=False, allow_null=True)
-    role = serializers.CharField(required=False,allow_null=True)
+    role = serializers.CharField(required=False, allow_null=True)
 
 
 class UserUpdateSerializer(serializers.Serializer):
@@ -21,9 +22,3 @@ class UserUpdateSerializer(serializers.Serializer):
     password = serializers.CharField(required=False)
     date_of_birth = serializers.DateField(required=False, allow_null=True)
     address = serializers.CharField(required=False, allow_null=True)
-
-
-    
-    
-
-

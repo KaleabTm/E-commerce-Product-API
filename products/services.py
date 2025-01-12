@@ -6,15 +6,16 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-def create_product_image(*, product: Products, image, label: str = None) -> ProductImage:
+def create_product_image(
+    *, product: Products, image, label: str = None
+) -> ProductImage:
     product_image = ProductImage.objects.create(
         product=product,
         image=image,
         label=label,
     )
-    print('ll', product_image)
+    print("ll", product_image)
     return product_image
-
 
 
 def create_product(
@@ -58,11 +59,13 @@ def create_product(
     )
 
     # Create associated product images
-    print("i",images)
+    print("i", images)
 
     for img_data in images:
-        print("iii",img_data["image"])
-        create_product_image(product=product, image=img_data["image"], label=img_data.get("label"))
+        print("iii", img_data["image"])
+        create_product_image(
+            product=product, image=img_data["image"], label=img_data.get("label")
+        )
 
     return product
 
@@ -75,7 +78,7 @@ def update_product(
     stock: int,
     category: str,
     images: List[dict],  # List of image objects with 'image' and 'label'
-    product_id: str  # The ID of the product to update
+    product_id: str,  # The ID of the product to update
 ) -> Products:
     # Fetch the existing product by ID
     try:
@@ -97,28 +100,33 @@ def update_product(
     # Update or create ProductImage instances for the images
     for image_data in images:
         # Check if image already exists for this product, and update it if necessary
-        if 'id' in image_data:  # Image update logic
+        if "id" in image_data:  # Image update logic
             try:
-                product_image = ProductImage.objects.get(id=image_data['id'], product=product)
-                product_image.image = image_data['image']
-                product_image.label = image_data.get('label', product_image.label)  # Preserve old label if not updated
+                product_image = ProductImage.objects.get(
+                    id=image_data["id"], product=product
+                )
+                product_image.image = image_data["image"]
+                product_image.label = image_data.get(
+                    "label", product_image.label
+                )  # Preserve old label if not updated
                 product_image.save()
             except ProductImage.DoesNotExist:
                 # If image doesn't exist, create a new one
                 ProductImage.objects.create(
                     product=product,
-                    image=image_data['image'],
-                    label=image_data.get('label', '')
+                    image=image_data["image"],
+                    label=image_data.get("label", ""),
                 )
         else:
             # Create new images if no image id is provided
             ProductImage.objects.create(
                 product=product,
-                image=image_data['image'],
-                label=image_data.get('label', '')
+                image=image_data["image"],
+                label=image_data.get("label", ""),
             )
 
     return product
+
 
 def reduce_stock(product: Products, quantity: int) -> int:
     """
@@ -141,5 +149,3 @@ def reduce_stock(product: Products, quantity: int) -> int:
     product.save(update_fields=["stock"])
 
     return product.stock
-
-

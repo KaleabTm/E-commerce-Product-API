@@ -1,20 +1,25 @@
 from rules import predicate
 
+
 @predicate
 def is_staff(user):
     return user.is_staff
+
 
 @predicate
 def is_superuser(user):
     return user.is_superuser
 
+
 @predicate
 def is_cart_owner(user, cart):
     return cart.user == user
 
+
 @predicate
 def is_customer(user):
     return not user.role == "CU"
+
 
 @predicate
 def is_authenticated(user):
@@ -29,6 +34,7 @@ def is_admin(user):
 @predicate
 def is_reviewer(user, review):
     return review.user == user
+
 
 @predicate
 def order_owner(user, order):

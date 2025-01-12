@@ -81,6 +81,6 @@ class RegisterApi(APIView):
 
         except Exception as e:
             # Handle any other unexpected errors
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

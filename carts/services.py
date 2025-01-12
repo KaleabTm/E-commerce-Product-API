@@ -17,7 +17,7 @@ def create_cart(
     print("got user", u)
     cart = Cart.objects.create(user=u)
 
-    print("cart",cart)
+    print("cart", cart)
 
     cart.full_clean()
 
@@ -33,7 +33,9 @@ def add_to_cart(user, product, quantity):
     if products.stock < quantity:
         raise ValueError("Insufficient stock available.")
 
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=products, quantity=quantity)
+    cart_item, created = CartItem.objects.get_or_create(
+        cart=cart, product=products, quantity=quantity
+    )
 
     cart_item.cart_item_total_price = apply_discount(products.id) * quantity
 

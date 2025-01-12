@@ -12,9 +12,9 @@ User = get_user_model()
 
 
 def create_order(*, user, has_paid=False, status="PENDING") -> Order:
-    print('i',user)
+    print("i", user)
     customer = User.objects.get(id=user)
-    print("p",customer)
+    print("p", customer)
     order = Order.objects.create(user=customer, has_paid=has_paid, status=status)
 
     order.full_clean()
@@ -23,17 +23,17 @@ def create_order(*, user, has_paid=False, status="PENDING") -> Order:
 
     return order
 
+
 def create_order_item(*, user, product: str, quantity: int) -> OrderItem:
-    order  = create_order(user=user)
-    print ("o o", order)
-    
+    order = create_order(user=user)
+    print("o o", order)
+
     target_product = get_object_or_404(Products, id=product)
 
-    reduce_stock(target_product,quantity)
+    reduce_stock(target_product, quantity)
 
     print("pty")
     item_total_price = apply_discount(target_product.id) * quantity
-
 
     order_item = OrderItem.objects.create(
         order=order,
@@ -47,6 +47,7 @@ def create_order_item(*, user, product: str, quantity: int) -> OrderItem:
     order_item.save()
 
     return order_item
+
 
 def approve_order(order_id):
     order = get_object_or_404(Order, id=order_id)
@@ -79,7 +80,7 @@ def place_order_cart_all(user):
             product=item.product,
             quantity=item.quantity,
             price=item.product.price,
-            item_total_price=item.cart_item_total_price
+            item_total_price=item.cart_item_total_price,
         )
 
         reduce_stock(item.product, item.quantity)
@@ -88,13 +89,16 @@ def place_order_cart_all(user):
     cart.items.all().delete()
     return order
 
+
 def place_order_cart(user, product_id):
     cart = Cart.objects.prefetch_related("items").get(user=user)
     product = Products.objects.get(id=product_id)
     items = cart.items.get(product=product)
 
     # Create the order
-    order = Order.objects.create(user=user, total_amount=items.cart_item_total_price, status="Pending")
+    order = Order.objects.create(
+        user=user, total_amount=items.cart_item_total_price, status="Pending"
+    )
 
     # Create order items and reduce stock
 
@@ -103,7 +107,7 @@ def place_order_cart(user, product_id):
         product=product,
         quantity=items.quantity,
         price=items.product.price,
-        item_total_price=items.cart_item_total_price
+        item_total_price=items.cart_item_total_price,
     )
     reduce_stock(product, items.quantity)
 
@@ -124,9 +128,9 @@ def cancel_order(order_id: str):
         item.product.stock += item.quantity
         item.product.save()
 
+
 def update_order(order_id: str, **kwargs):
     order = get_object_or_404(Order, id=order_id)
     for key, value in kwargs.items():
         setattr(order, key, value)
     order.save()
-

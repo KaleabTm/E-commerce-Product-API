@@ -6,7 +6,8 @@ from .models import Discount
 class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
-        fields = '__all__'
+        fields = "__all__"
+
 
 class DiscountCreateSerializer(serializers.Serializer):
     product = serializers.CharField()
@@ -14,6 +15,7 @@ class DiscountCreateSerializer(serializers.Serializer):
     value = serializers.DecimalField(max_digits=10, decimal_places=2)
     start_date = serializers.DateTimeField()
     end_date = serializers.DateTimeField()
+
 
 class DiscountUpdateSerializer(serializers.Serializer):
     discount_type = serializers.ChoiceField(choices=["PERCENTAGE", "FLAT"])
@@ -31,6 +33,3 @@ class DiscountListSerializer(serializers.ModelSerializer):
 class DiscountReactivateSerializer(serializers.Serializer):
     start_date = serializers.DateTimeField()
     end_date = serializers.DateTimeField()
-
-
-

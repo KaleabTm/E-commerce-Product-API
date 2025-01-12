@@ -14,7 +14,6 @@ def create_discount(
     end_date,
 ) -> Discount:
     products = Products.objects.get(id=product)
-    
 
     if start_date > end_date:
         raise ValueError("Start date cannot be greater than end date.")
@@ -71,8 +70,10 @@ def delete_discount(
 
     return None
 
+
 def is_available(discount):
     return discount.start_date <= now() <= discount.end_date
+
 
 def apply_discount(product_id):
     product = Products.objects.get(id=product_id)
@@ -104,7 +105,7 @@ def reactivate_discount(discount_id, start_date, end_date):
         raise ValueError("Start date cannot be greater than end date.")
     if start_date < now():
         raise ValueError("Start date cannot be in the past.")
-    
+
     discount.start_date = start_date
     discount.end_date = end_date
     discount.is_active = True
@@ -112,4 +113,3 @@ def reactivate_discount(discount_id, start_date, end_date):
     discount.save()
 
     return discount
-

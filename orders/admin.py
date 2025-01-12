@@ -6,9 +6,13 @@ from .models import OrderItem, Order
 
 class OrderItemAdmin(admin.ModelAdmin):
     model = OrderItem
-    list_display = ["product", "quantity",]
+    list_display = [
+        "product",
+        "quantity",
+    ]
 
-admin.site.register(OrderItem,OrderItemAdmin)
+
+admin.site.register(OrderItem, OrderItemAdmin)
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -16,7 +20,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "user",
-
     ]
 
-admin.site.register(Order,OrderAdmin)
+
+admin.site.register(Order, OrderAdmin)
